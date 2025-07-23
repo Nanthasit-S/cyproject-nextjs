@@ -1,3 +1,62 @@
 @import "tailwindcss";
 
-@config "../tailwind.config.js"
+@config "../tailwind.config.js";
+
+/* Custom Swiper Styles for a friendly UX/UI */
+.swiper-button-next,
+.swiper-button-prev {
+    background-color: rgba(38, 38, 38, 0.5); /* Semi-transparent black background */
+    border-radius: 50%; /* Make it circular */
+    width: 44px !important; /* Set a fixed width */
+    height: 44px !important; /* Set a fixed height */
+    color: #ffffff !important; /* White arrow color */
+    transition: background-color 0.3s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+    background-color: rgba(0, 0, 0, 0.7); /* Darker on hover */
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+    font-size: 1.25rem !important; /* Adjust arrow size */
+    font-weight: 700;
+}
+
+.swiper-pagination-bullet {
+    background-color: #A1A1AA !important; /* Inactive bullet color (gray) */
+    opacity: 0.8 !important;
+}
+
+.swiper-pagination-bullet-active {
+    background-color: #ffffff !important; /* Active bullet color (violet) */
+    opacity: 1 !important;
+}
+
+.card-container {
+    position: relative;
+    overflow: hidden; /* Ensures the overlay stays within the card's bounds */
+    border-radius: 1rem; /* Match HeroUI Card's default radius */
+}
+
+.card-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 10;
+}
+
+.card-container:hover .card-overlay {
+    opacity: 1;
+}

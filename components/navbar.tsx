@@ -14,10 +14,7 @@ import {
   DropdownSection,
 } from "@heroui/dropdown";
 import { Avatar } from "@heroui/avatar"; // เราจะใช้ Avatar สำหรับรูปโปรไฟล์
-import { Button } from "@heroui/button";
-import { Link } from "@heroui/link";
 import NextLink from "next/link";
-import { useTheme } from "next-themes";
 import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
@@ -81,52 +78,29 @@ export const Navbar = () => {
         </div>
         
         <div className="hidden sm:flex items-center gap-3">
-          <Link isExternal href={siteConfig.links.twitter} aria-label="Twitter">
-            <TwitterIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.discord} aria-label="Discord">
-            <DiscordIcon className="text-default-500" />
-          </Link>
-          <Link isExternal href={siteConfig.links.github} aria-label="GitHub">
-            <GithubIcon className="text-default-500" />
-          </Link>
           <ThemeSwitch />
 
           {!loading && (
             <>
               {isAuthenticated && user ? (
                 <div className="flex items-center gap-4">
-                  {user.role === "admin" && (
-                    <Dropdown placement="bottom-end">
-                      <DropdownTrigger>
-                        <Button variant="flat" color="secondary" size="sm">
-                          Admin Panel
-                        </Button>
-                      </DropdownTrigger>
-                      <DropdownMenu aria-label="Admin Actions" variant="flat">
-                        <DropdownItem key="images" href="/dashboard/images" startContent={<ImagesIcon />}>
-                          Manage Images
-                        </DropdownItem>
-                      </DropdownMenu>
-                    </Dropdown>
-                  )}
-                  
                   <Dropdown placement="bottom-end">
                     <DropdownTrigger>
                       <Avatar
                         isBordered
                         as="button"
                         className="transition-transform"
-                        color="secondary"
+                        color="default"
                         size="sm"
                         src={user.pictureUrl}
                       />
                     </DropdownTrigger>
                     <DropdownMenu aria-label="Profile Actions" variant="flat">
-                      <DropdownItem key="profile" className="h-14 gap-2">
-                        <p className="font-semibold">Signed in as</p>
-                        <p className="font-semibold">{user.displayName}</p>
-                      </DropdownItem>
+                        {user.role === "admin" ? (
+                          <DropdownItem key="images" href="/dashboard/images" startContent={<ImagesIcon />}>
+                            Manage Images
+                          </DropdownItem>
+                        ) : null}
                       <DropdownItem key="settings" as={NextLink} href="/profile" startContent={<SettingsIcon />}>
                         My Profile
                       </DropdownItem>

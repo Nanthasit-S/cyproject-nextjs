@@ -37,6 +37,10 @@ export const siteConfig = {
       href: "/dashboard/images", // <-- เพิ่มส่วนนี้
     },                          // <-- เพิ่มส่วนนี้
     {
+      label: "Book a Table", // <-- เพิ่มลิงก์นี้
+      href: "/booking",     // <-- เพิ่มลิงก์นี้
+    },
+    {
       label: "Settings",
       href: "/settings",
     },
