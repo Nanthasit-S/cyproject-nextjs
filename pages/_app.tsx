@@ -1,4 +1,4 @@
-// forgm/pages/_app.tsx
+// fixcy/pages/_app.tsx
 import type { AppProps } from "next/app";
 import { HeroUIProvider } from "@heroui/system";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
@@ -7,6 +7,11 @@ import { AuthProvider } from "@/lib/AuthContext";
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
 
+// vvvvvvvvvvvvvv CHANGE IS HERE vvvvvvvvvvvvvv
+import { NotificationProvider } from "@/lib/NotificationContext";
+import { NotificationModal } from "@/components/NotificationModal";
+// ^^^^^^^^^^^^^^ CHANGE IS HERE ^^^^^^^^^^^^^^
+
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
 
@@ -14,7 +19,10 @@ export default function App({ Component, pageProps }: AppProps) {
     <HeroUIProvider navigate={router.push}>
       <NextThemesProvider attribute="class" defaultTheme="light">
         <AuthProvider>
-          <Component {...pageProps} />
+          <NotificationProvider>
+            <Component {...pageProps} />
+            <NotificationModal />
+          </NotificationProvider>
         </AuthProvider>
       </NextThemesProvider>
     </HeroUIProvider>

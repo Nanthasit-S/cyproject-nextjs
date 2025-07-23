@@ -1,0 +1,115 @@
+/* fixcy/styles/Layout.css */
+
+.restaurant-layout {
+    background-color: #f3f4f6; /* bg-gray-100 */
+    border: 2px solid #e5e7eb; /* border-gray-200 */
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-top: 2rem;
+    overflow-x: auto; /* For responsiveness on small screens */
+}
+
+.dark .restaurant-layout {
+    background-color: #1f2937; /* dark:bg-gray-800 */
+    border-color: #374151; /* dark:border-gray-700 */
+}
+
+.zone-container {
+    padding: 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 2rem;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.dark .zone-container {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.zone-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb; /* border-gray-200 */
+}
+.dark .zone-title {
+    border-color: #374151; /* dark:border-gray-700 */
+}
+
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: 1rem;
+}
+
+.table-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.table-div {
+    width: 70px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid transparent;
+}
+
+.table-div.available {
+    background-color: #d1fae5; /* bg-green-200 */
+    color: #065f46; /* text-green-800 */
+    border-color: #6ee7b7; /* border-green-400 */
+}
+.dark .table-div.available {
+    background-color: #052e16;
+    color: #a7f3d0;
+    border-color: #10b981;
+}
+.table-div.available:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
+}
+
+.table-div.reserved {
+    background-color: #fee2e2; /* bg-red-200 */
+    color: #991b1b; /* text-red-800 */
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+.dark .table-div.reserved {
+    background-color: #450a0a;
+    color: #fca5a5;
+}
+
+
+.table-div.selected {
+    border-color: #6366f1; /* border-indigo-500 */
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.8);
+    transform: scale(1.1);
+}
+
+.table-number {
+    font-size: 1.25rem;
+}
+
+.table-capacity {
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.stage {
+    background-color: #374151; /* bg-gray-700 */
+    color: white;
+    padding: 1rem 2rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 2rem;
+}

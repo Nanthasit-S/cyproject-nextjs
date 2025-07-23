@@ -1,10 +1,17 @@
-// forgm/pages/api/tables.ts
+// fixcy/pages/api/tables.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { pool } from '@/lib/db';
+import jwt from 'jsonwebtoken';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
     return res.status(405).json({ message: 'Method Not Allowed' });
+  }
+
+  // Verify user is authenticated
+  const { auth_token } = req.cookies;
+  if (!auth_token) {
+    return res.status(401).json({ message: 'Not authenticated' });
   }
 
   // ดึงวันที่ที่ต้องการตรวจสอบจาก query, ถ้าไม่ระบุให้ใช้ัวันปัจจุบัน
@@ -19,16 +26,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const zones = await conn.query("SELECT * FROM zones ORDER BY id ASC");
     
     // ดึงข้อมูลโต๊ะทั้งหมด
-    const tables = await conn.query("SELECT * FROM tables ORDER BY id ASC");
+    const tables = await conn.query("SELECT * FROM tables WHERE status = 'available' ORDER BY id ASC");
     
-    // ดึงข้อมูลการจองที่ "confirmed" หรือ "pending" สำหรับวันที่ที่ระบุ
+    // ดึงข้อมูลการจองที่ "confirmed" สำหรับวันที่ที่ระบุ
     const bookings = await conn.query(
-      "SELECT table_id FROM bookings WHERE booking_date = ? AND status IN ('pending', 'confirmed')",
+      "SELECT table_id FROM bookings WHERE booking_date = ? AND status = 'confirmed'",
       [targetDate]
     );
     const bookedTableIds = bookings.map((b: { table_id: any; }) => b.table_id);
 
-    // อัปเดตสถานะของโต๊ะ
+    // อัปเดตสถานะของโต๊ะสำหรับ client
     const tablesWithStatus = tables.map((table: { id: any; }) => ({
       ...table,
       status: bookedTableIds.includes(table.id) ? 'reserved' : 'available',

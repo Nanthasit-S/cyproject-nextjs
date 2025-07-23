@@ -1,4 +1,4 @@
-// forgm/pages/dashboard/images.tsx
+// fixcy/pages/admin/images.tsx
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import jwt from 'jsonwebtoken';
@@ -9,6 +9,7 @@ import { Card } from "@heroui/card";
 import { Image as HeroImage } from "@heroui/image";
 import { ImageEditModal } from '@/components/ImageEditModal';
 import { ImageUploadModal } from '@/components/ImageUploadModal';
+import { useNotification } from '@/lib/NotificationContext';
 
 // Icons
 const PlusIcon = () => <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M12 5v14m-7-7h14"/></svg>;
@@ -33,8 +34,8 @@ interface DashboardProps {
 }
 
 export default function ImageDashboardPage({ user, initialImages }: DashboardProps) {
+  const { showNotification } = useNotification();
   const [images, setImages] = useState<SlideImage[]>(initialImages);
-  
   const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingImage, setEditingImage] = useState<SlideImage | null>(null);
@@ -50,9 +51,9 @@ export default function ImageDashboardPage({ user, initialImages }: DashboardPro
       
       const updatedImages = await (await fetch('/api/slider-images')).json();
       setImages(updatedImages);
-      alert('Image uploaded successfully!');
+      showNotification('Success', 'Image uploaded successfully!', 'success');
     } catch (error: any) {
-      alert(`Error: ${error.message}`);
+      showNotification('Error', `Upload Error: ${error.message}`, 'error');
       throw error;
     }
   };
@@ -67,20 +68,20 @@ export default function ImageDashboardPage({ user, initialImages }: DashboardPro
     if (!response.ok) throw new Error(result.message || 'Update failed');
 
     setImages(images.map(img => img.id === result.updatedImage.id ? result.updatedImage : img));
-    alert('Changes saved successfully!');
+    showNotification('Success', 'Changes saved successfully!', 'success');
   };
 
   const handleDelete = async (e: React.MouseEvent, id: number, imageUrl: string) => {
-    e.stopPropagation(); // Prevent card click event
+    e.stopPropagation(); 
     if (!confirm('Are you sure you want to delete this image?')) return;
 
     try {
       const response = await fetch(`/api/admin/slider?id=${id}&imageUrl=${encodeURIComponent(imageUrl)}`, { method: 'DELETE' });
       if (!response.ok) throw new Error('Delete failed');
       setImages(images.filter(img => img.id !== id));
-      alert('Image deleted successfully!');
+      showNotification('Success', 'Image deleted successfully!', 'success');
     } catch (error) {
-      alert('Error deleting image.');
+      showNotification('Error', 'Error deleting image.', 'error');
     }
   };
 
@@ -97,12 +98,7 @@ export default function ImageDashboardPage({ user, initialImages }: DashboardPro
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            <Card 
-                isPressable 
-                isHoverable 
-                onPress={() => setIsUploadModalOpen(true)} 
-                className="aspect-square flex items-center justify-center bg-default-100 hover:bg-default-200"
-            >
+            <Card isPressable isHoverable onPress={() => setIsUploadModalOpen(true)} className="aspect-square flex items-center justify-center bg-default-100 hover:bg-default-200">
                 <div className="text-center text-default-500">
                     <PlusIcon />
                     <p className="mt-2 font-semibold">Add New Image</p>
@@ -112,39 +108,21 @@ export default function ImageDashboardPage({ user, initialImages }: DashboardPro
             {images.map((image) => (
               <div key={image.id} className="card-container rounded-2xl">
                 <Card className="w-full h-full aspect-square">
-                    <HeroImage 
-                        removeWrapper
-                        src={image.image_url} 
-                        alt={image.alt_text || 'Slider Image'} 
-                        className="w-full h-full object-cover"
-                    />
+                    <HeroImage removeWrapper src={image.image_url} alt={image.alt_text || 'Slider Image'} className="w-full h-full object-cover" />
                 </Card>
                 <div className="card-overlay">
                     <p className="text-lg font-bold mb-4 px-2 text-center">{image.alt_text || "No Alt Text"}</p>
                     <div className="flex gap-4">
-                        <Button color="primary" variant="solid" onPress={() => openEditModal(image)}>
-                            <EditIcon /> Edit
-                        </Button>
-                        <Button color="danger" variant="solid" onClick={(e) => handleDelete(e, image.id, image.image_url)}>
-                           <DeleteIcon/> Delete
-                        </Button>
+                        <Button color="primary" variant="solid" onPress={() => openEditModal(image)}><EditIcon /> Edit</Button>
+                        <Button color="danger" variant="solid" onClick={(e) => handleDelete(e, image.id, image.image_url)}><DeleteIcon/> Delete</Button>
                     </div>
                 </div>
               </div>
             ))}
         </div>
 
-        <ImageUploadModal
-            isOpen={isUploadModalOpen}
-            onClose={() => setIsUploadModalOpen(false)}
-            onUpload={handleUpload}
-        />
-       <ImageEditModal 
-            image={editingImage}
-            isOpen={isEditModalOpen}
-            onClose={() => setIsEditModalOpen(false)}
-            onSave={handleEdit}
-       />
+        <ImageUploadModal isOpen={isUploadModalOpen} onClose={() => setIsUploadModalOpen(false)} onUpload={handleUpload} />
+       <ImageEditModal image={editingImage} isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)} onSave={handleEdit} />
     </DefaultLayout>
   );
 }
@@ -153,10 +131,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const { auth_token } = context.req.cookies;
     if (!auth_token) return { redirect: { destination: '/', permanent: false } };
     try {
-      // vvvvvvvvvvvvvv CHANGE IS HERE vvvvvvvvvvvvvv
       const decoded = jwt.verify(auth_token, process.env.JWT_SECRET!) as unknown as UserProfile;
-      // ^^^^^^^^^^^^^^ CHANGE IS HERE ^^^^^^^^^^^^^^
-      
       if (decoded.role !== 'admin') return { redirect: { destination: '/profile', permanent: false } };
       
       const apiUrl = process.env.NODE_ENV === 'production' 

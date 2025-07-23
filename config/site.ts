@@ -9,44 +9,24 @@ export const siteConfig = {
       href: "/profile",
     },
     {
-      label: "Dashboard",
-      href: "/dashboard",
+      label: "Book a Table",
+      href: "/booking",
     },
     {
-      label: "Projects",
-      href: "/projects",
+      label: "Image Management",
+      href: "/admin/images",
     },
     {
-      label: "Team",
-      href: "/team",
-    },
-    {
-      label: "Calendar",
-      href: "/calendar",
-    },
-    {
-      label: "Settings",
-      href: "/settings",
+      label: "Establishment Mgmt",
+      href: "/admin/management",
     },
     {
       label: "Help & Feedback",
       href: "/help-feedback",
     },
     {
-      label: "Image Management", // <-- เพิ่มส่วนนี้
-      href: "/dashboard/images", // <-- เพิ่มส่วนนี้
-    },                          // <-- เพิ่มส่วนนี้
-    {
-      label: "Book a Table", // <-- เพิ่มลิงก์นี้
-      href: "/booking",     // <-- เพิ่มลิงก์นี้
-    },
-    {
-      label: "Settings",
-      href: "/settings",
-    },
-    {
       label: "Logout",
-      href: "/api/auth/logout", // <-- แก้ไขบรรทัดนี้
+      href: "/api/auth/logout",
     },
   ],
   links: {

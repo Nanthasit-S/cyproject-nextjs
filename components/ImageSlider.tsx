@@ -30,15 +30,15 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({ images }) => {
             loop={true}
             className="h-full"
         >
-            {images.map((image) => (
+            {images.map((image, index) => ( // Added index for priority
             <SwiperSlide key={image.id}>
                 <div className="relative w-full h-full">
                 <Image
                     src={image.image_url}
                     alt={image.alt_text || 'Slider Image'}
-                    layout="fill"
-                    objectFit="cover"
-                    priority
+                    fill // Use fill instead of layout="fill"
+                    style={{ objectFit: 'cover' }} // Use style prop for object-fit
+                    priority={index === 0} // Only prioritize the first image for LCP
                 />
                 {image.link_url && (
                     <a

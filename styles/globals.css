@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@import "./Layout.css"; 
 @config "../tailwind.config.js";
 
 /* Custom Swiper Styles for a friendly UX/UI */

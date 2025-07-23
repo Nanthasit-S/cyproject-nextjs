@@ -1,4 +1,3 @@
-// fixcy/components/theme-switch.tsx
 import { FC, useState, useEffect } from "react";
 import { useTheme } from "next-themes";
 import { Button } from "@heroui/button";
@@ -20,7 +19,6 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
     setTheme(theme === "light" ? "dark" : "light");
   };
 
-  // ป้องกัน Hydration Mismatch และการกระพริบของ UI
   if (!isMounted) {
     return <div className="w-10 h-10 rounded-lg bg-default-200 animate-pulse" />;
   }
@@ -31,7 +29,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({ className }) => {
       aria-label={theme === 'light' ? "Switch to dark mode" : "Switch to light mode"}
       className={className}
       size="md"
-      variant="ghost" // ทำให้ปุ่มมีพื้นหลังและเส้นขอบเมื่อ hover
+      variant="ghost"
       onPress={toggleTheme}
     >
       {theme === "light" ? (

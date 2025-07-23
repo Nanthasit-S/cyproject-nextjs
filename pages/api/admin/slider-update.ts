@@ -1,4 +1,3 @@
-// fixcy/pages/api/admin/slider-update.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -68,10 +67,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 const imageResponse = await fetch(newImageUrl);
                 if (!imageResponse.ok) throw new Error('Failed to fetch image from URL');
                 
-                // vvvvvvvvvvvvvv CHANGE IS HERE vvvvvvvvvvvvvv
                 const arrayBuffer = await imageResponse.arrayBuffer();
-                const buffer = new Uint8Array(arrayBuffer); // Use Uint8Array directly
-                // ^^^^^^^^^^^^^^ CHANGE IS HERE ^^^^^^^^^^^^^^
+                const buffer = new Uint8Array(arrayBuffer);
 
                 fileName = `${Date.now()}-${path.basename(new URL(newImageUrl).pathname)}`;
                 const newPath = path.join(uploadDir, fileName);

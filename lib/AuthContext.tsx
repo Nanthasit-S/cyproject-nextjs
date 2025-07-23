@@ -42,17 +42,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           const userData: User = await res.json();
           setUser(userData);
 
-          // Session Timeout Logic
           const expiresIn = (userData.exp * 1000) - Date.now();
           if (expiresIn > 0) {
             setTimeout(logout, expiresIn);
           } else {
-            // If token is already expired
             logout();
           }
         }
       } catch (error) {
-        console.error("Failed to fetch user", error);
       } finally {
         setLoading(false);
       }

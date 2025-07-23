@@ -1,4 +1,3 @@
-// forgm/pages/api/admin/slider.ts
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { promises as fs } from 'fs';
 import path from 'path';
@@ -24,16 +23,14 @@ const verifyAdmin = (req: NextApiRequest): boolean => {
     }
 };
 
-// This function now uses the correct type for the chunks array
 async function getRawBody(req: NextApiRequest): Promise<Buffer> {
     return new Promise((resolve, reject) => {
-        const chunks: Uint8Array[] = []; // <-- FIX IS HERE
+        const chunks: Uint8Array[] = [];
         req.on('data', (chunk) => chunks.push(chunk));
         req.on('end', () => resolve(Buffer.concat(chunks)));
         req.on('error', (err) => reject(err));
     });
 }
-
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     if (!verifyAdmin(req)) {
@@ -86,10 +83,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                         throw new Error(`Failed to fetch image from URL: ${imageResponse.statusText}`);
                     }
                     
-                    // vvvvvvvvvvvvvv CHANGE IS HERE vvvvvvvvvvvvvv
                     const arrayBuffer = await imageResponse.arrayBuffer();
-                    const buffer = new Uint8Array(arrayBuffer); // Use Uint8Array directly
-                    // ^^^^^^^^^^^^^^ CHANGE IS HERE ^^^^^^^^^^^^^^
+                    const buffer = new Uint8Array(arrayBuffer);
                     
                     const fileName = `${Date.now()}-${path.basename(new URL(urlToFetch).pathname)}`;
                     const newPath = path.join(uploadDir, fileName);
@@ -108,7 +103,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 }
                 break;
             
-            case 'PUT': // This case was moved to slider-update.ts but left here as an example
+            case 'PUT':
                 const body = await getRawBody(req);
                 const { id: updateId, altText: newAltText } = JSON.parse(body.toString());
 
@@ -123,7 +118,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
                 res.status(200).json({ message: 'Image details updated successfully' });
                 break;
-
 
             case 'DELETE':
                 const { id, imageUrl: urlToDelete } = req.query;
